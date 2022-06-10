@@ -57,14 +57,14 @@ namespace NKE_Ordering_System
 
             if (existingTable != null)
             {*/
-            Order_Table table = new Order_Table();
+            /*Order_Table table = new Order_Table();
             table.Order_Table_ID = Order_Table_ID;
             table.TableID = TableID;
             table.OrderID = OrderID;
 
             db.Order_Tables.InsertOnSubmit(table);
 
-            db.SubmitChanges();
+            db.SubmitChanges();*/
             // }
                 
         }

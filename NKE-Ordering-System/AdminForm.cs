@@ -66,7 +66,7 @@ namespace NKE_Ordering_System
         {
             comboBoxTable.Items.Clear();
 
-            table.showTable();
+            table.showAllTable();
 
             foreach (var t in table.allTable)
                 comboBoxTable.Items.Add(t);

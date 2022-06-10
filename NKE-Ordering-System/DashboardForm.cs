@@ -29,12 +29,12 @@ namespace NKE_Ordering_System
             try
             {
                 initialState();
-
-                table.showTable();
+                
                 item.getItemType();
-
-                comboBoxTable.DataSource = table.allTable;
+                
                 comboBoxMenu.DataSource = item.allItemType;
+
+                initialTableData();
 
                 dataGridViewOrderList.ColumnCount = 4;
                 dataGridViewOrderList.Columns[0].Name = "No.";
@@ -46,6 +46,33 @@ namespace NKE_Ordering_System
             {
                 MessageBox.Show(error.Message);
             }
+        }
+
+        public void initialTableData()
+        {
+            comboBoxTable.Items.Clear();
+            comboBoxActiveTable.Items.Clear();
+
+            table.showAvailableTable();
+            table.showActiveTable();
+
+            foreach (var t in table.allAvailableTable)
+                comboBoxTable.Items.Add(t);
+
+            foreach (var at in table.allActiveTable)
+                comboBoxActiveTable.Items.Add(at);
+
+            /*comboBoxTable.DataSource = table.allAvailableTable;
+            comboBoxActiveTable.DataSource = table.allActiveTable;*/
+
+            table.allAvailableTable.Clear();
+            table.allActiveTable.Clear();
+
+            comboBoxTable.ResetText();
+            comboBoxActiveTable.ResetText();
+
+            comboBoxTable.SelectedIndex = -1;
+            comboBoxActiveTable.SelectedIndex = -1;
         }
 
         private void DashboardForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -175,16 +202,16 @@ namespace NKE_Ordering_System
              // comboBoxItem.Enabled = true;
             string menuName = comboBoxMenu.SelectedItem.ToString();
 
-            // comboBoxItem.Items.Clear();
+            comboBoxItem.Items.Clear();
             comboBoxItem.DataSource = null;
 
             item.Item_Type = menuName;
 
             item.showItem();
 
-            /*foreach(var i in item.allItem)
-                comboBoxItem.Items.Add(i);*/
-            comboBoxItem.DataSource = item.allItem;
+            foreach (var i in item.allItem)
+                comboBoxItem.Items.Add(i);
+            // comboBoxItem.DataSource = item.allItem;
 
             item.allItem.Clear();
             // }
@@ -192,7 +219,28 @@ namespace NKE_Ordering_System
 
         private void comboBoxItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            item.Item_Name = comboBoxItem.SelectedItem.ToString();
+
+            item.getItemData();
+
+            labelPrice.Text = item.Item_Price.ToString();
+        }
+
+        private void numericUpDownQuantity_ValueChanged(object sender, EventArgs e)
+        {
+            decimal totalPrice = 0;
+
+            item.Item_Name = comboBoxItem.SelectedItem.ToString();
+
+            item.getItemData();
+
+            labelPrice.Text = item.Item_Price.ToString();
+
+            totalPrice = decimal.Parse(labelPrice.Text) * numericUpDownQuantity.Value;
+
+            labelPrice.Text = totalPrice.ToString();
+
+            totalPrice = 0;
         }
 
         public bool validationForm()
@@ -277,7 +325,7 @@ namespace NKE_Ordering_System
                         order.Order_Time = DateTime.Now;
                         order.Order_Status = 1;
                         order.Order_Type = 1;
-                        order.Total_Price = 33;
+                        order.Total_Price = decimal.Parse(labelPrice.Text);
                         order.UserID = user_id;
 
                         item.Item_Name = comboBoxItem.SelectedItem.ToString();
@@ -285,7 +333,7 @@ namespace NKE_Ordering_System
                         item.getItemID();
 
                         item.Order_Item_ID = item.generateID();
-                        item.Order_ID = order.generateID();
+                        item.Order_ID = order.OrderID;
                         item.Quantity = int.Parse(numericUpDownQuantity.Text);
 
                         table.Name = comboBoxTable.SelectedItem.ToString();
@@ -301,9 +349,9 @@ namespace NKE_Ordering_System
                         table.UpdateTableStatus();
                         item.StoreOrderItem();
 
+                        initialTableData();
+
                         display("New dine-in order successfully added.");
-                        
-                        
                     }
                     else // take away
                     {
@@ -332,6 +380,7 @@ namespace NKE_Ordering_System
                 {
                     if(comboBoxOrderType.SelectedIndex == 0) // Dine In
                     {
+
                         display("Order dine-in updated");
                     }
                     else // Take Away
@@ -354,5 +403,7 @@ namespace NKE_Ordering_System
         {
             e.Handled = e.KeyChar != (char)Keys.Back && !char.IsDigit(e.KeyChar);
         }
+
+        
     }
 }

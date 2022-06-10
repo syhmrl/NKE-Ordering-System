@@ -15,14 +15,12 @@ namespace NKE_Ordering_System
         public int Order_ID { get; set; }
         public bool exists { get; set; }
 
+        public List<String> allAvailableTable = new List<String>();
+        public List<String> allActiveTable = new List<String>();
         public List<String> allTable = new List<String>();
 
-        public void showTable()
+        public void showAllTable()
         {
-            /*IEnumerable<Table> queryTable =
-                from table in db.Tables
-                select table;
-*/
             var queryTable =
                 from table in db.Tables
                 select table;
@@ -31,10 +29,42 @@ namespace NKE_Ordering_System
             {
                 Name = table.TableName.ToString();
                 allTable.Add(Name);
+            }
+        }
+
+        public void showAvailableTable()
+        {
+            /*IEnumerable<Table> queryTable =
+                from table in db.Tables
+                select table;
+*/
+            var queryTable =
+                from table in db.Tables
+                where table.TableStatus == 0
+                select table;
+
+            foreach (var table in queryTable)
+            {
+                Name = table.TableName.ToString();
+                allAvailableTable.Add(Name);
                 /*allTable.Add(table.TableName);*/
                 /*Id = table.TableID;
                 Name = table.TableName.ToString();
                 Status = int.Parse(table.TableStatus.ToString());*/
+            }
+        }
+
+        public void showActiveTable()
+        {
+            var queryTable =
+                from table in db.Tables
+                where table.TableStatus == 1
+                select table;
+
+            foreach (var table in queryTable)
+            {
+                Name = table.TableName.ToString();
+                allActiveTable.Add(Name);
             }
         }
 
