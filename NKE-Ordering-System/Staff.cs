@@ -54,10 +54,18 @@ namespace NKE_Ordering_System
 
         public int generateID()
         {
-            Random random = new Random();
-            int newID = random.Next(1000, 9999);
-            _Id = newID;
-            return _Id;
+            var SearchAny = db.Users.Count();
+            if (SearchAny != 0)
+            {
+                var MaxID = db.Users.Max(i => i.UserID);
+                int newId = MaxID;
+                return ++newId;
+            }
+            else
+            {
+                int newId = 1000;
+                return newId;
+            }
         }
 
         public void loginUser()

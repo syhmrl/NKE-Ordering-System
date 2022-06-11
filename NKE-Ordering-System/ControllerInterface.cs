@@ -12,6 +12,5 @@ namespace NKE_Ordering_System
         void Store();
         void Update();
         void Delete();
-        int generateID();
     }
 }

@@ -71,8 +71,6 @@
     <Compile Include="AdminForm.Designer.cs">
       <DependentUpon>AdminForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Bank.cs" />
-    <Compile Include="Cash.cs" />
     <Compile Include="ControllerInterface.cs" />
     <Compile Include="DashboardForm.cs">
       <SubType>Form</SubType>
@@ -86,6 +84,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GenerationID.cs" />
     <Compile Include="InitialInterface.cs" />
     <Compile Include="ItemController.cs" />
     <Compile Include="NKEOrder.designer.cs">

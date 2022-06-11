@@ -19,6 +19,14 @@ namespace NKE_Ordering_System
         public List<String> allActiveTable = new List<String>();
         public List<String> allTable = new List<String>();
 
+        /*public TableController()
+        {
+            Id = Id;
+            Name = Name;
+            Status = Status;
+            Order_ID = Order_ID;
+        }*/
+
         public void showAllTable()
         {
             var queryTable =
@@ -95,6 +103,37 @@ namespace NKE_Ordering_System
                 Id = o.TableID;
                 Order_ID = o.Order_Table_ID;
             }
+        }
+
+        public void debug()
+        {
+            IEnumerable<Order_Table> queryFindOrder =
+                from o_table in db.Order_Tables
+                join table in db.Tables on o_table.TableID equals table.TableID
+                where table.TableStatus == 1
+                where o_table.TableID == Id
+                select o_table;
+
+            foreach (Order_Table o in queryFindOrder)
+            {
+                // Id = o.TableID;
+                Order_ID = o.Order_Table_ID;
+            }
+            // return queryFindOrder.Count();
+        }
+
+        public void updateOrder()
+        {
+            IEnumerable<Order_Table> queryTable =
+                from o_table in db.Order_Tables
+                where o_table.TableID == Id
+                select o_table;
+
+            foreach(Order_Table o in queryTable)
+            {
+                Order_ID = o.OrderID;
+            }
+
         }
 
         public void Show()
@@ -176,9 +215,18 @@ namespace NKE_Ordering_System
 
         public int generateID()
         {
-            Random random = new Random();
-            int newID = random.Next(1000, 9999);
-            return newID;
+            var SearchAny = db.Tables.Count();
+            if (SearchAny != 0)
+            {
+                var MaxID = db.Tables.Max(i => i.TableID);
+                int newId = MaxID;
+                return ++newId;
+            }
+            else
+            {
+                int newId = 1000;
+                return newId;
+            }
         }
     }
 }

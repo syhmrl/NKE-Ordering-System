@@ -17,10 +17,170 @@ namespace NKE_Ordering_System
         public int Order_Table_ID { get; set; }
         public int UserID { get; set; }
         public int TableID { get; set; }
+        public bool exists { get; set; }
+
+        /*public OrderController()
+        {
+            OrderID = OrderID;
+            Order_Time = Order_Time;
+            Order_Status = Order_Status;
+            Order_Type = Order_Type;
+            Total_Price = Total_Price;
+            Order_Table_ID = Order_Table_ID;
+            UserID = UserID;
+            TableID = TableID;
+        }*/
+
+        public void getOrderID()
+        {
+            IEnumerable<Order_Table> querytable =
+                from o_table in db.Order_Tables
+                where o_table.TableID == TableID
+                select o_table;
+
+            foreach (Order_Table o in querytable)
+                OrderID = o.OrderID;
+        }
+
+        public int generateID()
+        {
+            var SearchAny = db.Orders.Count();
+            if (SearchAny != 0)
+            {
+                var MaxID = db.Orders.Max(i => i.OrderID);
+                int newId = MaxID;
+                return ++newId;
+            }
+            else
+            {
+                int newId = 1000;
+                return newId;
+            }
+        }
+
+        public int generateOrderTableID()
+        {
+            var SearchAny = db.Order_Tables.Count();
+            if (SearchAny != 0)
+            {
+                var MaxID = db.Order_Tables.Max(i => i.Order_Table_ID);
+                int newId = MaxID;
+                return ++newId;
+            }
+            else
+            {
+                int newId = 1000;
+                return newId;
+            }
+        }
+        public void getTotalPrice()
+        {
+            IEnumerable<Order> queryOrder =
+                from order in db.Orders
+                where order.OrderID == OrderID
+                select order;
+
+            foreach (Order o in queryOrder)
+                Total_Price = (decimal)o.OrderTotalPrice;
+        }
+
+        public void UpdateTotalPrice()
+        {
+            IEnumerable<Order> queryOrder =
+                from order in db.Orders
+                where order.OrderID == OrderID
+                select order;
+
+            foreach (Order order in queryOrder)
+                order.OrderTotalPrice = Total_Price;
+
+            db.SubmitChanges();
+        }
+
+        public decimal calculateTotalPrice()
+        {
+
+            /*IEnumerable<Item> queryItem =
+                from item in db.Items
+                join o_item in db.Order_Items on item.ItemID equals o_item.ItemID
+                where o_item.OrderID == OrderID
+                select new
+                {
+                    item.ItemPrice,
+                    o_item.Quantity
+                };*/
+
+            /*var queryItem = db.Items.Join(db.Order_Items,
+                                          ) */
+
+            var queryItem =
+                from item in db.Items
+                join o_item in db.Order_Items on item.ItemID equals o_item.ItemID
+                where o_item.OrderID == OrderID
+                select new
+                {
+                    Price = item.ItemPrice,
+                    Quantity = o_item.Quantity
+                };
+
+            Total_Price = 0;
+
+            foreach (var item in queryItem)
+            {
+                int quantity = (int)item.Quantity;
+                decimal price = (decimal)item.Price;
+
+                Total_Price += price * quantity;
+            }
+
+            return Total_Price;
+        }
+
+        public void UpdateStatus()
+        {
+            IEnumerable<Order> queryOrder =
+                from order in db.Orders
+                where order.OrderID == OrderID
+                select order;
+
+            foreach (Order order in queryOrder)
+                order.OrderStatus = Order_Status;
+
+            db.SubmitChanges();
+        }
+
+        public void DeleteOrderTable()
+        {
+            IEnumerable<Order_Table> queryOrderTable =
+                from o_table in db.Order_Tables
+                where o_table.OrderID == OrderID
+                select o_table;
+
+            foreach (Order_Table ot in queryOrderTable)
+                db.Order_Tables.DeleteOnSubmit(ot);
+
+            db.SubmitChanges();
+        }
 
         public void Delete()
         {
-            
+            IEnumerable<Order> queryOrder =
+                from order in db.Orders
+                where order.OrderID == OrderID
+                select order;
+
+            foreach (Order order in queryOrder)
+                db.Orders.DeleteOnSubmit(order);
+
+            IEnumerable<Order_Table> queryTable =
+                from table in db.Order_Tables
+                where table.OrderID == OrderID
+                select table;
+
+            foreach (Order_Table table in queryTable)
+                db.Order_Tables.DeleteOnSubmit(table);
+
+            db.SubmitChanges();
         }
 
         public void Show()
@@ -76,31 +236,19 @@ namespace NKE_Ordering_System
             
         }
 
-        public int generateID()
+        /*public int debug()
         {
-            Random random = new Random();
-            int newID = random.Next(1000, 9999);
-            OrderID = newID;
-            return OrderID;
-        }
-
-        public decimal calculateTotalPrice()
-        {
-
-            /*IEnumerable<Item> queryItem =
+            *//*var queryItem =
                 from item in db.Items
                 join o_item in db.Order_Items on item.ItemID equals o_item.ItemID
                 where o_item.OrderID == OrderID
                 select new
                 {
-                    item.ItemPrice,
-                    o_item.Quantity
+                    Price = item.ItemPrice,
+                    Quantity = o_item.Quantity
                 };*/
 
-            /*var queryItem = db.Items.Join(db.Order_Items,
-                                          ) */
-
-            var queryItem =
+            /*var queryItem =
                 from item in db.Items
                 join o_item in db.Order_Items on item.ItemID equals o_item.ItemID
                 where o_item.OrderID == OrderID
@@ -110,16 +258,10 @@ namespace NKE_Ordering_System
                     Quantity = o_item.Quantity
                 };
 
-            foreach (var item in queryItem)
-            {
-                decimal quantity = (decimal)item.Quantity;
-                decimal price = (decimal)item.Price;
+            int count = queryItem.Count();
 
-                Total_Price += price * quantity;
-            }
-
-            return Total_Price;
-        }
+            return count;*//*
+        }*/
         public override void storeTA()
         {
 
@@ -135,6 +277,11 @@ namespace NKE_Ordering_System
         }
 
         public override void showTA()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int generateTA_ID()
         {
             throw new NotImplementedException();
         }

@@ -42,16 +42,17 @@ namespace NKE_Ordering_System
 
         private void AdminForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            // Application.Exit();
         }
 
         
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            /*this.Hide();
             Form1 loginForm = new Form1();
-            loginForm.Show();
+            loginForm.Show();*/
+            this.Close();
         }
 
         private void AdminForm_KeyDown(object sender, KeyEventArgs e)
@@ -450,7 +451,5 @@ namespace NKE_Ordering_System
                 e.Handled = true;
             }
         }
-
-        
     }
 }

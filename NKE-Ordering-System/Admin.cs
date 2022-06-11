@@ -8,6 +8,7 @@ namespace NKE_Ordering_System
 {
     class Admin
     {
+        NKEOrderDataContext db = new NKEOrderDataContext();
         public string Access_Password { get; set; }
         public bool ValidateAdmin { get; set; }
         public void accessPasswordValidation()
@@ -21,5 +22,7 @@ namespace NKE_Ordering_System
                 ValidateAdmin = false;
             }
         }
+
+        
     }
 }

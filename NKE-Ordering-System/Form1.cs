@@ -53,16 +53,24 @@ namespace NKE_Ordering_System
                     
                     if (loginUser.isStaff == true)
                     {
+                        this.Hide();
                         DashboardForm dashboardForm = new DashboardForm();
                         dashboardForm.user_id = loginUser._Id;
-                        dashboardForm.Show();
-                        this.Hide();
+                        dashboardForm.ShowDialog();
+                        dashboardForm = null;
+                        this.Show();
+                        textBoxName.Text = string.Empty;
+                        textBoxPassword.Text = string.Empty;
                     }
                     else if (loginUser.isAdmin == true)
                     {
-                        AdminForm adminForm = new AdminForm();
-                        adminForm.Show();
                         this.Hide();
+                        AdminForm adminForm = new AdminForm();
+                        adminForm.ShowDialog();
+                        adminForm = null;
+                        this.Show();
+                        textBoxName.Text = string.Empty;
+                        textBoxPassword.Text = string.Empty;
                     }
                 }
                 else

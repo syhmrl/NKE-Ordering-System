@@ -56,16 +56,14 @@
             this.comboBoxTable = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridViewOrderList = new System.Windows.Forms.DataGridView();
-            this.buttonRemove = new System.Windows.Forms.Button();
-            this.buttonClear = new System.Windows.Forms.Button();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label5 = new System.Windows.Forms.Label();
             this.labelTotalPrice = new System.Windows.Forms.Label();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.buttonDeleteAll = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrderList)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -76,7 +74,7 @@
             this.userToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1087, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1098, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -186,6 +184,7 @@
             this.comboBoxActiveTable.Name = "comboBoxActiveTable";
             this.comboBoxActiveTable.Size = new System.Drawing.Size(200, 24);
             this.comboBoxActiveTable.TabIndex = 17;
+            this.comboBoxActiveTable.SelectedIndexChanged += new System.EventHandler(this.comboBoxActiveTable_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -220,9 +219,9 @@
             // 
             // buttoUpdateOrder
             // 
-            this.buttoUpdateOrder.Location = new System.Drawing.Point(134, 377);
+            this.buttoUpdateOrder.Location = new System.Drawing.Point(126, 377);
             this.buttoUpdateOrder.Name = "buttoUpdateOrder";
-            this.buttoUpdateOrder.Size = new System.Drawing.Size(121, 37);
+            this.buttoUpdateOrder.Size = new System.Drawing.Size(117, 37);
             this.buttoUpdateOrder.TabIndex = 13;
             this.buttoUpdateOrder.Text = "Update Order";
             this.buttoUpdateOrder.UseVisualStyleBackColor = true;
@@ -281,9 +280,9 @@
             // 
             // buttonAddOrder
             // 
-            this.buttonAddOrder.Location = new System.Drawing.Point(261, 377);
+            this.buttonAddOrder.Location = new System.Drawing.Point(249, 377);
             this.buttonAddOrder.Name = "buttonAddOrder";
-            this.buttonAddOrder.Size = new System.Drawing.Size(103, 37);
+            this.buttonAddOrder.Size = new System.Drawing.Size(115, 37);
             this.buttonAddOrder.TabIndex = 6;
             this.buttonAddOrder.Text = "Add Order";
             this.buttonAddOrder.UseVisualStyleBackColor = true;
@@ -348,40 +347,18 @@
             // 
             // dataGridViewOrderList
             // 
+            this.dataGridViewOrderList.AllowUserToDeleteRows = false;
+            this.dataGridViewOrderList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewOrderList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOrderList.Location = new System.Drawing.Point(406, 56);
             this.dataGridViewOrderList.Name = "dataGridViewOrderList";
+            this.dataGridViewOrderList.ReadOnly = true;
             this.dataGridViewOrderList.RowHeadersWidth = 51;
             this.dataGridViewOrderList.RowTemplate.Height = 24;
-            this.dataGridViewOrderList.Size = new System.Drawing.Size(638, 289);
+            this.dataGridViewOrderList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewOrderList.Size = new System.Drawing.Size(682, 289);
             this.dataGridViewOrderList.TabIndex = 2;
-            // 
-            // buttonRemove
-            // 
-            this.buttonRemove.Location = new System.Drawing.Point(3, 3);
-            this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(75, 35);
-            this.buttonRemove.TabIndex = 3;
-            this.buttonRemove.Text = "Remove";
-            this.buttonRemove.UseVisualStyleBackColor = true;
-            // 
-            // buttonClear
-            // 
-            this.buttonClear.Location = new System.Drawing.Point(84, 3);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(98, 35);
-            this.buttonClear.TabIndex = 4;
-            this.buttonClear.Text = "Clear Order";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.buttonRemove);
-            this.flowLayoutPanel1.Controls.Add(this.buttonClear);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(403, 433);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(193, 43);
-            this.flowLayoutPanel1.TabIndex = 5;
+            this.dataGridViewOrderList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOrderList_CellContentClick);
             // 
             // label5
             // 
@@ -401,15 +378,36 @@
             this.labelTotalPrice.TabIndex = 8;
             this.labelTotalPrice.Text = "0";
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Location = new System.Drawing.Point(935, 376);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(151, 39);
+            this.buttonRefresh.TabIndex = 9;
+            this.buttonRefresh.Text = "Refresh Table";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // buttonDeleteAll
+            // 
+            this.buttonDeleteAll.Location = new System.Drawing.Point(787, 376);
+            this.buttonDeleteAll.Name = "buttonDeleteAll";
+            this.buttonDeleteAll.Size = new System.Drawing.Size(142, 39);
+            this.buttonDeleteAll.TabIndex = 10;
+            this.buttonDeleteAll.Text = "Clear Order";
+            this.buttonDeleteAll.UseVisualStyleBackColor = true;
+            this.buttonDeleteAll.Click += new System.EventHandler(this.buttonDeleteAll_Click);
+            // 
             // DashboardForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(1087, 528);
+            this.ClientSize = new System.Drawing.Size(1098, 528);
+            this.Controls.Add(this.buttonDeleteAll);
+            this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.labelTotalPrice);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.dataGridViewOrderList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -425,7 +423,6 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownQuantity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOrderList)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -442,10 +439,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox comboBoxTable;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dataGridViewOrderList;
-        private System.Windows.Forms.Button buttonRemove;
-        private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button buttonAddOrder;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label labelTotalPrice;
@@ -465,5 +458,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDownQuantity;
         private System.Windows.Forms.Label labelPrice;
         private System.Windows.Forms.Label label10;
+        public System.Windows.Forms.DataGridView dataGridViewOrderList;
+        private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.Button buttonDeleteAll;
     }
 }

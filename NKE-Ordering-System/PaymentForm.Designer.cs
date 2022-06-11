@@ -61,9 +61,9 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.comboBoxPaymentType);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(226, 32);
+            this.groupBox1.Location = new System.Drawing.Point(204, 32);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(306, 387);
+            this.groupBox1.Size = new System.Drawing.Size(349, 387);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Payment";
@@ -75,7 +75,7 @@
             this.comboBoxType.Items.AddRange(new object[] {
             "Dine-In",
             "Take Away"});
-            this.comboBoxType.Location = new System.Drawing.Point(142, 36);
+            this.comboBoxType.Location = new System.Drawing.Point(163, 36);
             this.comboBoxType.Name = "comboBoxType";
             this.comboBoxType.Size = new System.Drawing.Size(145, 24);
             this.comboBoxType.TabIndex = 12;
@@ -94,7 +94,7 @@
             // 
             this.comboBoxTakeAway.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTakeAway.FormattingEnabled = true;
-            this.comboBoxTakeAway.Location = new System.Drawing.Point(142, 118);
+            this.comboBoxTakeAway.Location = new System.Drawing.Point(163, 118);
             this.comboBoxTakeAway.Name = "comboBoxTakeAway";
             this.comboBoxTakeAway.Size = new System.Drawing.Size(145, 24);
             this.comboBoxTakeAway.TabIndex = 10;
@@ -111,7 +111,7 @@
             // labelTotal
             // 
             this.labelTotal.AutoSize = true;
-            this.labelTotal.Location = new System.Drawing.Point(142, 248);
+            this.labelTotal.Location = new System.Drawing.Point(181, 248);
             this.labelTotal.Name = "labelTotal";
             this.labelTotal.Size = new System.Drawing.Size(14, 16);
             this.labelTotal.TabIndex = 8;
@@ -128,7 +128,7 @@
             // 
             // buttonPayment
             // 
-            this.buttonPayment.Location = new System.Drawing.Point(163, 283);
+            this.buttonPayment.Location = new System.Drawing.Point(184, 284);
             this.buttonPayment.Name = "buttonPayment";
             this.buttonPayment.Size = new System.Drawing.Size(124, 33);
             this.buttonPayment.TabIndex = 6;
@@ -138,10 +138,11 @@
             // 
             // textBoxAmountPaid
             // 
-            this.textBoxAmountPaid.Location = new System.Drawing.Point(142, 203);
+            this.textBoxAmountPaid.Location = new System.Drawing.Point(163, 203);
             this.textBoxAmountPaid.Name = "textBoxAmountPaid";
             this.textBoxAmountPaid.Size = new System.Drawing.Size(145, 22);
             this.textBoxAmountPaid.TabIndex = 5;
+            this.textBoxAmountPaid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxAmountPaid_KeyPress);
             // 
             // label3
             // 
@@ -156,10 +157,11 @@
             // 
             this.comboBoxTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTable.FormattingEnabled = true;
-            this.comboBoxTable.Location = new System.Drawing.Point(142, 78);
+            this.comboBoxTable.Location = new System.Drawing.Point(163, 78);
             this.comboBoxTable.Name = "comboBoxTable";
             this.comboBoxTable.Size = new System.Drawing.Size(145, 24);
             this.comboBoxTable.TabIndex = 3;
+            this.comboBoxTable.SelectedIndexChanged += new System.EventHandler(this.comboBoxTable_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -177,7 +179,7 @@
             this.comboBoxPaymentType.Items.AddRange(new object[] {
             "Bank",
             "Cash"});
-            this.comboBoxPaymentType.Location = new System.Drawing.Point(142, 160);
+            this.comboBoxPaymentType.Location = new System.Drawing.Point(163, 160);
             this.comboBoxPaymentType.Name = "comboBoxPaymentType";
             this.comboBoxPaymentType.Size = new System.Drawing.Size(145, 24);
             this.comboBoxPaymentType.TabIndex = 1;
@@ -202,6 +204,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PaymentForm";
             this.Text = "Payment";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PaymentForm_FormClosed);
             this.Load += new System.EventHandler(this.PaymentForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

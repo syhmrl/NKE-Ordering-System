@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace NKE_Ordering_System
 {
-    class Bank: Payment
+    abstract class GenerationID
     {
-        
+        public abstract int generateID();
     }
 }
