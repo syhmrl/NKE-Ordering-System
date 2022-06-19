@@ -17,6 +17,7 @@ namespace NKE_Ordering_System
         public RegisterForm()
         {
             InitializeComponent();
+            this.Icon = NKE_Ordering_System.Properties.Resources.Papirus_Team_Papirus_Apps_Cs_login;
         }
 
         private void errorMessage(string msg)

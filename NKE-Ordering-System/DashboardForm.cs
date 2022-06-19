@@ -13,8 +13,6 @@ namespace NKE_Ordering_System
 {
     public partial class DashboardForm : Form, InitialInterface
     {
-        
-        // FormController form = new FormController();
 
         NKEOrderDataContext db = new NKEOrderDataContext();
 
@@ -24,6 +22,7 @@ namespace NKE_Ordering_System
         public DashboardForm()
         {
             InitializeComponent();
+            this.Icon = NKE_Ordering_System.Properties.Resources.Inipagi_Business_Economic_Store;
         }
 
         private void DashboardForm_Load(object sender, EventArgs e)
@@ -60,49 +59,66 @@ namespace NKE_Ordering_System
 
         public void initialTableData()
         {
-            TableController table = new TableController();
+            ValidateMessage display = errorMessage;
+            try
+            {
+                TableController table = new TableController();
 
-            comboBoxTable.Items.Clear();
-            comboBoxActiveTable.Items.Clear();
+                comboBoxTable.Items.Clear();
+                comboBoxActiveTable.Items.Clear();
 
-            table.showAvailableTable();
-            table.showActiveTable();
+                table.showAvailableTable();
+                table.showActiveTable();
 
-            foreach (var t in table.allAvailableTable)
-                comboBoxTable.Items.Add(t);
+                foreach (var t in table.allAvailableTable)
+                    comboBoxTable.Items.Add(t);
 
-            foreach (var at in table.allActiveTable)
-                comboBoxActiveTable.Items.Add(at);
+                foreach (var at in table.allActiveTable)
+                    comboBoxActiveTable.Items.Add(at);
 
-            /*comboBoxTable.DataSource = table.allAvailableTable;
-            comboBoxActiveTable.DataSource = table.allActiveTable;*/
+                /*comboBoxTable.DataSource = table.allAvailableTable;
+                comboBoxActiveTable.DataSource = table.allActiveTable;*/
 
-            table.allAvailableTable.Clear();
-            table.allActiveTable.Clear();
+                table.allAvailableTable.Clear();
+                table.allActiveTable.Clear();
 
-            comboBoxTable.ResetText();
-            comboBoxActiveTable.ResetText();
+                comboBoxTable.ResetText();
+                comboBoxActiveTable.ResetText();
 
-            comboBoxTable.SelectedIndex = -1;
-            comboBoxActiveTable.SelectedIndex = -1;
+                comboBoxTable.SelectedIndex = -1;
+                comboBoxActiveTable.SelectedIndex = -1;
+            }
+            catch(Exception error)
+            {
+                display(error.Message);
+            }
+            
         }
 
         public void initialTakeAwayData()
         {
-            OrderController order = new OrderController();
+            ValidateMessage display = errorMessage;
+            try
+            {
+                OrderController order = new OrderController();
 
-            comboBoxTakeAway.Items.Clear();
+                comboBoxTakeAway.Items.Clear();
 
-            order.showTakeAwayID();
+                order.showTakeAwayID();
 
-            foreach (var t in order.takeAwayTable)
-                comboBoxTakeAway.Items.Add(t);
+                foreach (var t in order.takeAwayTable)
+                    comboBoxTakeAway.Items.Add(t);
 
-            order.takeAwayTable.Clear();
+                order.takeAwayTable.Clear();
 
-            comboBoxTakeAway.ResetText();
+                comboBoxTakeAway.ResetText();
 
-            comboBoxTakeAway.SelectedIndex = -1;
+                comboBoxTakeAway.SelectedIndex = -1;
+            }
+            catch(Exception error)
+            {
+                display(error.Message);
+            }
         }
 
         private void DashboardForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -199,7 +215,6 @@ namespace NKE_Ordering_System
                     buttonAddOrder.Enabled = true;
                     buttoUpdateOrder.Enabled = false;
                     buttonDeleteAll.Enabled = false;
-                    buttonRefresh.Enabled = false;
                     dataGridViewOrderList.Enabled = false;
                 }
                 else if(comboBoxStatus.SelectedIndex == 1) // Active Order
@@ -213,8 +228,11 @@ namespace NKE_Ordering_System
                     buttonAddOrder.Enabled = false;
                     buttoUpdateOrder.Enabled = true;
                     buttonDeleteAll.Enabled = false;
-                    buttonRefresh.Enabled = true;
-                    dataGridViewOrderList.Enabled = true;
+                    dataGridViewOrderList.Enabled = false;
+                    dataGridViewOrderList.DataSource = null;
+                    comboBoxTakeAway.ResetText();
+                    comboBoxTakeAway.SelectedIndex = -1;
+                    labelTotalPrice.Text = "0.00";
                 }
             }
             else if(comboBoxOrderType.SelectedIndex == 1) // TA
@@ -230,7 +248,6 @@ namespace NKE_Ordering_System
                     buttonAddOrder.Enabled = true;
                     buttoUpdateOrder.Enabled = false;
                     buttonDeleteAll.Enabled = false;
-                    buttonRefresh.Enabled = false;
                     dataGridViewOrderList.Enabled = false;
                 }
                 else if(comboBoxStatus.SelectedIndex == 1) // Active Order
@@ -244,8 +261,11 @@ namespace NKE_Ordering_System
                     buttonAddOrder.Enabled = false;
                     buttoUpdateOrder.Enabled = true;
                     buttonDeleteAll.Enabled = false;
-                    buttonRefresh.Enabled = true;
-                    dataGridViewOrderList.Enabled = true;
+                    dataGridViewOrderList.Enabled = false;
+                    dataGridViewOrderList.DataSource = null;
+                    comboBoxActiveTable.ResetText();
+                    comboBoxActiveTable.SelectedIndex = -1;
+                    labelTotalPrice.Text = "0.00";
                 }
             }
         }
@@ -258,118 +278,190 @@ namespace NKE_Ordering_System
             }*/
         }
 
+        private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ValidateMessage display = errorMessage;
+            try
+            {
+                if (comboBoxTakeAway.SelectedIndex != -1)
+                {
+                    buttonDeleteAll.Enabled = true;
+                    dataGridViewOrderList.Enabled = true;
+                    OrderController order = new OrderController();
+                    ItemController item = new ItemController();
+
+                    order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+                    // order.getOrderIDByType();
+                    order.getTotalPrice();
+
+                    labelTotalPrice.Text = order.Total_Price.ToString();
+                    // MessageBox.Show(order.OrderID.ToString());
+                    loadOrderTable(order.OrderID);
+                    /*if (comboBoxActiveTable.SelectedIndex != -1)
+                        buttonDeleteAll.Enabled = true;
+
+                    OrderController order = new OrderController();
+                    ItemController item = new ItemController();
+
+                    order.getOrderIDByType();
+                    order.getTotalPrice();
+
+                    labelTotalPrice.Text = order.Total_Price.ToString();
+
+                    loadOrderTable(order.OrderID);*/
+                }
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
+        }
+
         private void comboBoxActiveTable_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(comboBoxActiveTable.SelectedIndex != -1)
-                buttonDeleteAll.Enabled = true;
+            ValidateMessage display = errorMessage;
+            try
+            {
+                if (comboBoxActiveTable.SelectedIndex != -1)
+                {
+                    buttonDeleteAll.Enabled = true;
+                    dataGridViewOrderList.Enabled = true;
+                    OrderController order = new OrderController();
+                    TableController table = new TableController();
+                    ItemController item = new ItemController();
 
-            OrderController order = new OrderController();
-            TableController table = new TableController();
-            ItemController item = new ItemController();
+                    table.Name = comboBoxActiveTable.SelectedItem.ToString();
+                    table.getOrderID();
+                    // table.getTableID();
+                    // order.TableID = table.Id;
+                    // order.getOrderID();
+                    // int count = table.debug();
+                    // order.OrderID = order.OrderID;
+                    order.OrderID = table.Order_ID;
+                    item.Order_ID = order.OrderID;
+                    // MessageBox.Show(order.OrderID.ToString());
+                    order.getTotalPrice();
 
-            table.Name = comboBoxActiveTable.SelectedItem.ToString();
-            table.getOrderID();
-            // table.getTableID();
-            // order.TableID = table.Id;
-            // order.getOrderID();
-            // int count = table.debug();
-            // order.OrderID = order.OrderID;
-            order.OrderID = table.Order_ID;
-            item.Order_ID = order.OrderID;
-            // MessageBox.Show(order.OrderID.ToString());
-            order.getTotalPrice();
+                    labelTotalPrice.Text = order.Total_Price.ToString();
 
-            labelTotalPrice.Text = order.Total_Price.ToString();
+                    // item.Show();
 
-            // item.Show();
+                    // var first = item.allOrder[0].;
+                    // MessageBox.Show(order.OrderID.ToString());
+                    loadOrderTable(order.OrderID);
 
-            // var first = item.allOrder[0].;
+                    // MessageBox.Show(item.allOrder.ToString());
 
-            loadOrderTable(order.OrderID);
-
-            // MessageBox.Show(item.allOrder.ToString());
-
-            // dataGridViewOrderList.Rows.Add(1, item.Item_Name, item.Item_Type, item.Item_Price, item.Quantity);
-
-
+                    // dataGridViewOrderList.Rows.Add(1, item.Item_Name, item.Item_Type, item.Item_Price, item.Quantity);
+                }
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
         }
         private void comboBoxMenu_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ItemController item = new ItemController();
-            /*if(comboBoxMenu.SelectedIndex != -1)
-            {*/
-            // comboBoxItem.Enabled = true;
-            string menuName = comboBoxMenu.SelectedItem.ToString();
+            ValidateMessage display = errorMessage;
+            try
+            {
+                ItemController item = new ItemController();
+                /*if(comboBoxMenu.SelectedIndex != -1)
+                {*/
+                // comboBoxItem.Enabled = true;
+                string menuName = comboBoxMenu.SelectedItem.ToString();
 
-            comboBoxItem.Items.Clear();
-            comboBoxItem.DataSource = null;
+                comboBoxItem.Items.Clear();
+                comboBoxItem.DataSource = null;
 
-            item.Item_Type = menuName;
+                item.Item_Type = menuName;
 
-            item.showItem();
+                item.showItem();
 
-            foreach (var i in item.allItem)
-                comboBoxItem.Items.Add(i);
-            // comboBoxItem.DataSource = item.allItem;
+                foreach (var i in item.allItem)
+                    comboBoxItem.Items.Add(i);
+                // comboBoxItem.DataSource = item.allItem;
 
-            item.allItem.Clear();
-            // }
+                item.allItem.Clear();
+                // }
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
         }
 
         private void comboBoxItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            TableController table = new TableController();
-            ItemController item = new ItemController();
-
-            item.Item_Name = comboBoxItem.SelectedItem.ToString();
-
-            item.getItemData();
-            
-
-            if(comboBoxStatus.SelectedIndex == 1 && comboBoxActiveTable.SelectedIndex != -1)
+            ValidateMessage display = errorMessage;
+            try
             {
-                // Get Order ID
-                table.Name = comboBoxActiveTable.SelectedItem.ToString();
-                table.getOrderID();
+                TableController table = new TableController();
+                ItemController item = new ItemController();
 
-                item.Order_ID = table.Order_ID;
+                item.Item_Name = comboBoxItem.SelectedItem.ToString();
 
-                item.getItemID();
-                item.getQuantity();
+                item.getItemData();
 
-                if(item.exist == true)
-                    numericUpDownQuantity.Value = item.Quantity;
-                else
-                    numericUpDownQuantity.Value = 1;
+
+                if (comboBoxStatus.SelectedIndex == 1 && comboBoxActiveTable.SelectedIndex != -1)
+                {
+                    // Get Order ID
+                    table.Name = comboBoxActiveTable.SelectedItem.ToString();
+                    table.getOrderID();
+
+                    item.Order_ID = table.Order_ID;
+
+                    item.getItemID();
+                    item.getQuantity();
+
+                    if (item.exist == true)
+                        numericUpDownQuantity.Value = item.Quantity;
+                    else
+                        numericUpDownQuantity.Value = 1;
+                }
+
+                labelPrice.Text = item.Item_Price.ToString();
             }
-
-            labelPrice.Text = item.Item_Price.ToString();
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
         }
 
         private void numericUpDownQuantity_ValueChanged(object sender, EventArgs e)
         {
-            ItemController item = new ItemController();
+            ValidateMessage display = errorMessage;
+            try
+            {
+                ItemController item = new ItemController();
 
-            decimal totalPrice = 0;
+                decimal totalPrice = 0;
 
-            item.Item_Name = comboBoxItem.SelectedItem.ToString();
+                item.Item_Name = comboBoxItem.SelectedItem.ToString();
 
-            item.getItemData();
+                item.getItemData();
 
-            labelPrice.Text = item.Item_Price.ToString();
+                labelPrice.Text = item.Item_Price.ToString();
 
-            totalPrice = decimal.Parse(labelPrice.Text) * numericUpDownQuantity.Value;
+                totalPrice = decimal.Parse(labelPrice.Text) * numericUpDownQuantity.Value;
 
-            labelPrice.Text = totalPrice.ToString();
+                labelPrice.Text = totalPrice.ToString();
 
-            totalPrice = 0;
+                totalPrice = 0;
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
         }
 
         public void loadOrderTable(int id)
         {
-            // item = new ItemController();
-
-            var queryItem =
+            ValidateMessage display = errorMessage;
+            try
+            {
+                var queryItem =
                 (from i in db.Items
                  join o_item in db.Order_Items on i.ItemID equals o_item.ItemID
                  where o_item.OrderID == id
@@ -382,7 +474,13 @@ namespace NKE_Ordering_System
                      Quantity = o_item.Quantity
                  }).ToList();
 
-            dataGridViewOrderList.DataSource = queryItem;
+                dataGridViewOrderList.DataSource = queryItem;
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
+            // item = new ItemController();
         }
 
         public bool validationForm()
@@ -597,14 +695,15 @@ namespace NKE_Ordering_System
                         OrderController order = new OrderController();
                         ItemController item = new ItemController();
 
-                        order.getOrderIDByType();
+                        /*order.getOrderIDByType();
 
                         foreach (var t in order.takeAwayTable)
                             comboBoxTakeAway.Items.Add(t);
 
                         // Get Order ID
                         // staff._Name = comboBoxTakeAway.SelectedItem.ToString();
-                        order.getOrderIDByType(); // Get Order Id by Type
+                        order.getOrderIDByType();*/ // Get Order Id by Type
+                        order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
 
                         // Item ID
                         item.Item_Name = comboBoxItem.SelectedItem.ToString();
@@ -621,7 +720,7 @@ namespace NKE_Ordering_System
                         if (item.exist == false)
                             item.StoreOrderItem();
 
-                        order.OrderID = item.Order_ID;
+                        // order.OrderID = item.Order_ID;
                         order.Total_Price = order.calculateTotalPrice();
                         //int count = order.debug();
                         order.UpdateTotalPrice();
@@ -650,13 +749,13 @@ namespace NKE_Ordering_System
             {
                 if(comboBoxOrderType.SelectedIndex == 0)
                 { 
-                OrderController order = new OrderController();
-                TableController table = new TableController();
-                ItemController item = new ItemController();
-                string message = "Do you confirm to delete this item?";
-                string title = "Delete Item";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result = MessageBox.Show(message, title, buttons);
+                    OrderController order = new OrderController();
+                    TableController table = new TableController();
+                    ItemController item = new ItemController();
+                    string message = "Do you confirm to delete this item?";
+                    string title = "Delete Item";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    DialogResult result = MessageBox.Show(message, title, buttons);
                     if (result == DialogResult.Yes)
                     {
                         // Get Order ID
@@ -691,13 +790,13 @@ namespace NKE_Ordering_System
                             table.UpdateTableStatus(); // Update Table Status based on Table Id
                             order.Delete(); // Delete Order and Order Table based Order Id
                             initialTableData(); // Reset Form
-                            initialTakeAwayData();
+                            // initialTakeAwayData();
                         }
 
                         display("Item Succesfully Deleted");
                     }
                 }
-                else
+                else // Take Away
                 {
                     OrderController order = new OrderController();
                     ItemController item = new ItemController();
@@ -709,12 +808,7 @@ namespace NKE_Ordering_System
                     if (result == DialogResult.Yes)
                     {
                         // Get Order ID
-                        order.getOrderIDByType();
-                        /*table.Name = comboBoxActiveTable.SelectedItem.ToString();
-                        table.getOrderID();*/
-                        /*table.getTableID();
-                        order.TableID = table.Id;
-                        order.getOrderID();*/
+                        order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
 
                         // Get Order Item ID
                         item.Order_Item_ID = Convert.ToInt32(dataGridViewOrderList.Rows[e.RowIndex].Cells[0].FormattedValue);
@@ -728,7 +822,7 @@ namespace NKE_Ordering_System
                         order.UpdateTotalPrice();
                         labelTotalPrice.Text = order.Total_Price.ToString();
 
-                        //item.Order_ID = table.Order_ID;
+                        item.Order_ID = order.OrderID;
                         // Reset Table
                         loadOrderTable(order.OrderID);
 
@@ -737,7 +831,7 @@ namespace NKE_Ordering_System
                         if (item.exist == false)
                         {
                             order.Delete(); // Delete Order and Order Table based Order Id
-                            initialTableData(); // Reset Form
+                            // initialTableData(); // Reset Form
                             initialTakeAwayData();
                         }
 
@@ -751,61 +845,81 @@ namespace NKE_Ordering_System
             }
         }
 
-        private void buttonRefresh_Click(object sender, EventArgs e)
-        {
-            ValidateMessage display = errorMessage;
-
-            try
-            {
-                // Reset
-                initialTableData();
-                initialTakeAwayData();
-                // loadOrderTable();
-
-                display("Table Refreshed");
-            }
-            catch(Exception error)
-            {
-                display(error.Message);
-            }
-        }
-
         private void buttonDeleteAll_Click(object sender, EventArgs e)
         {
             ValidateMessage display = errorMessage;
 
             try
             {
-                OrderController order = new OrderController();
-                TableController table = new TableController();
-                ItemController item = new ItemController();
-
-                string message = "Do you confirm to canceled this order?";
-                string title = "Delete Order";
-                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-                DialogResult result = MessageBox.Show(message, title, buttons);
-                if (result == DialogResult.Yes)
+                if(validationForm())
                 {
-                    table.Name = comboBoxActiveTable.SelectedItem.ToString();
-                    table.getOrderID();
+                    if(comboBoxOrderType.SelectedIndex == 0) // Dine-In
+                    {
+                        OrderController order = new OrderController();
+                        TableController table = new TableController();
+                        ItemController item = new ItemController();
 
-                    item.Order_ID = table.Order_ID;
-                    order.OrderID = table.Order_ID;
-                    table.Status = 0;
+                        string message = "Do you confirm to canceled this order?";
+                        string title = "Delete Order";
+                        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                        DialogResult result = MessageBox.Show(message, title, buttons);
+                        if (result == DialogResult.Yes)
+                        {
+                            table.Name = comboBoxActiveTable.SelectedItem.ToString();
+                            table.getOrderID();
 
-                    table.getTableID(); // Get Table ID based on Table Name
-                    table.UpdateTableStatus(); // Update Table Status based on Table Id
-                    order.getOrderIDByType();
-                    item.DeleteAllOrder(); // Delete all item
-                    order.Delete(); // Delete Order and Order Table based Order Id
+                            item.Order_ID = table.Order_ID;
+                            order.OrderID = table.Order_ID;
+                            table.Status = 0;
 
-                    // Reset
-                    initialTableData();
-                    initialTakeAwayData();
-                    loadOrderTable(order.OrderID);
+                            table.getTableID(); // Get Table ID based on Table Name
+                            table.UpdateTableStatus(); // Update Table Status based on Table Id
+                            // order.getOrderIDByType();
+                            item.DeleteAllOrder(); // Delete all item
+                            order.Delete(); // Delete Order and Order Table based Order Id
 
-                    MessageBox.Show("Order Canceled Successfully", title);
+                            // Reset
+                            initialTableData();
+                            // initialTakeAwayData();
+                            // loadOrderTable(order.OrderID);
+                            dataGridViewOrderList.DataSource = null;
+
+                            MessageBox.Show("Order Canceled Successfully", title);
+                        }
+                    }
+                    else // Take Away
+                    {
+                        OrderController order = new OrderController();
+                        ItemController item = new ItemController();
+
+                        string message = "Do you confirm to canceled this order?";
+                        string title = "Delete Order";
+                        MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                        DialogResult result = MessageBox.Show(message, title, buttons);
+                        if (result == DialogResult.Yes)
+                        {
+                            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+                            item.Order_ID = order.OrderID;
+                            
+                            // order.getOrderIDByType();
+                            item.DeleteAllOrder(); // Delete all item
+                            order.deleteTA(); // Delete Order and Order Table based Order Id
+
+                            // Reset
+                            // initialTableData();
+                            initialTakeAwayData();
+                            // loadOrderTable(order.OrderID);
+                            dataGridViewOrderList.DataSource = null;
+
+                            MessageBox.Show("Order Canceled Successfully", title);
+                        }
+                    }
                 }
+                else
+                {
+                    display("Fill all the form");
+                }
+                
             }
             catch(Exception error)
             {
@@ -818,34 +932,78 @@ namespace NKE_Ordering_System
             e.Handled = e.KeyChar != (char)Keys.Back && !char.IsDigit(e.KeyChar);
         }
 
-        private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
+        
+
+        private void buttonColor_Click(object sender, EventArgs e)
         {
-            if (comboBoxActiveTable.SelectedIndex != -1)
-                buttonDeleteAll.Enabled = true;
+            ValidateMessage display = errorMessage;
+            try
+            {
+                DialogResult myColor = colorDialogBackground.ShowDialog();
 
-            OrderController order = new OrderController();
-            ItemController item = new ItemController();
+                if(myColor == DialogResult.OK)
+                {
+                    this.BackColor = colorDialogBackground.Color;
+                }
+            }
+            catch(Exception error)
+            {
+                display(error.Message);
+            }
+        }
 
-            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
-            // order.getOrderIDByType();
-            order.getTotalPrice();
+        private void buttonFont_Click(object sender, EventArgs e)
+        {
+            ValidateMessage display = errorMessage;
+            try
+            {
+                DialogResult myFont = fontDialogLabel.ShowDialog();
 
-            labelTotalPrice.Text = order.Total_Price.ToString();
+                if (myFont == DialogResult.OK)
+                {
+                    this.Font = fontDialogLabel.Font;
+                }
+                    
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
+        }
 
-            loadOrderTable(order.OrderID);
-            /*if (comboBoxActiveTable.SelectedIndex != -1)
-                buttonDeleteAll.Enabled = true;
+        private void buttonImage_Click(object sender, EventArgs e)
+        {
+            ValidateMessage display = errorMessage;
+            try
+            {
+                if(openFileDialogPicture.ShowDialog() == DialogResult.OK)
+                {
+                    Image myImage = new Bitmap(openFileDialogPicture.FileName);
+                    this.BackgroundImage = myImage;
+                    this.BackgroundImageLayout = ImageLayout.Stretch;
+                }
 
-            OrderController order = new OrderController();
-            ItemController item = new ItemController();
+            }
+            catch (Exception error)
+            {
+                display(error.Message);
+            }
+        }
 
-            order.getOrderIDByType();
-            order.getTotalPrice();
+        private void buttonResetBackground_Click(object sender, EventArgs e)
+        {
+            this.BackgroundImage = null;
+        }
 
-            labelTotalPrice.Text = order.Total_Price.ToString();
+        private void buttonResetFont_Click(object sender, EventArgs e)
+        {
+            // Font font = new Font("Microsoft Sans Serif", "12.0f");
+            this.Font = new Font("Microsoft Sans Serif", 8, FontStyle.Regular);
+        }
 
-            loadOrderTable(order.OrderID);*/
-
+        private void buttonResetColor_Click(object sender, EventArgs e)
+        {
+            this.BackColor = SystemColors.ActiveBorder;
         }
     }
 }

@@ -17,6 +17,9 @@ namespace NKE_Ordering_System
         public Form1()
         {
             InitializeComponent();
+            this.Icon = NKE_Ordering_System.Properties.Resources.Papirus_Team_Papirus_Apps_Cs_login;
+            this.BackgroundImage = NKE_Ordering_System.Properties.Resources.background_profile_2;
+            this.BackgroundImageLayout = ImageLayout.Stretch;
         }
 
         private void buttonToRegister_Click(object sender, EventArgs e)

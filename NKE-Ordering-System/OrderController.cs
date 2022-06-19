@@ -70,6 +70,7 @@ namespace NKE_Ordering_System
                 select o_item;*/
             var queryOrder =
                 from o in db.Orders
+                where o.OrderStatus == 1
                 where o.OrderType == 2
                 select o;
 
@@ -205,7 +206,6 @@ namespace NKE_Ordering_System
         {
             IEnumerable<Order> queryOrder =
                 from order in db.Orders
-                join o_item in db.Order_Items on order.OrderID equals o_item.OrderID
                 where order.OrderID == OrderID
                 select order;
 
@@ -318,12 +318,20 @@ namespace NKE_Ordering_System
         }
         public override void deleteTA()
         {
-            throw new NotImplementedException();
+            IEnumerable<Order> queryOrder =
+                from order in db.Orders
+                where order.OrderID == OrderID
+                select order;
+
+            foreach (Order order in queryOrder)
+                db.Orders.DeleteOnSubmit(order);
+
+            db.SubmitChanges();
         }
 
         public override void updateTA()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void showTA()

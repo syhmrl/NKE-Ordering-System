@@ -19,51 +19,76 @@ namespace NKE_Ordering_System
         public PaymentForm()
         {
             InitializeComponent();
+            this.Icon = NKE_Ordering_System.Properties.Resources.Custom_Icon_Design_Flatastic_5_Payment_card;
         }
 
         private void PaymentForm_Load(object sender, EventArgs e)
         {
-            OrderController order = new OrderController();
-            TableController table = new TableController();
-            ItemController item = new ItemController();
+            try
+            {
+                OrderController order = new OrderController();
+                TableController table = new TableController();
+                ItemController item = new ItemController();
 
-            initialState();
-            initialTableData();
-            initialTakeAway();
+                initialState();
+                initialTableData();
+                initialTakeAway();
+            }
+            catch(Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+            
         }
 
         public void initialTableData()
         {
-            TableController table = new TableController();
+            try
+            {
+                TableController table = new TableController();
 
-            comboBoxTable.Items.Clear();
+                comboBoxTable.Items.Clear();
 
-            table.showActiveTable();
+                table.showActiveTable();
 
-            foreach (var at in table.allActiveTable)
-                comboBoxTable.Items.Add(at);
+                foreach (var at in table.allActiveTable)
+                    comboBoxTable.Items.Add(at);
 
-            table.allActiveTable.Clear();
+                table.allActiveTable.Clear();
 
-            comboBoxTable.ResetText();
-            comboBoxTable.SelectedIndex = -1;
+                comboBoxTable.ResetText();
+                comboBoxTable.SelectedIndex = -1;
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+            
         }
 
         public void initialTakeAway()
         {
-            OrderController order = new OrderController();
+            try
+            {
+                OrderController order = new OrderController();
 
-            comboBoxTakeAway.Items.Clear();
+                comboBoxTakeAway.Items.Clear();
 
-            order.showTakeAwayID();
+                order.showTakeAwayID();
 
-            foreach (var at in order.takeAwayTable)
-                comboBoxTakeAway.Items.Add(at);
+                foreach (var at in order.takeAwayTable)
+                    comboBoxTakeAway.Items.Add(at);
 
-            order.takeAwayTable.Clear();
+                order.takeAwayTable.Clear();
 
-            comboBoxTakeAway.ResetText();
-            comboBoxTakeAway.SelectedIndex = -1;
+                comboBoxTakeAway.ResetText();
+                comboBoxTakeAway.SelectedIndex = -1;
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+            
         }
 
         public void initialState()
@@ -166,39 +191,55 @@ namespace NKE_Ordering_System
 
         private void comboBoxTable_SelectedIndexChanged(object sender, EventArgs e)
         {
-            OrderController order = new OrderController();
-            TableController table = new TableController();
-
-            if(comboBoxTable.SelectedIndex != -1)
+            try
             {
-                table.Name = comboBoxTable.SelectedItem.ToString();
-                table.getOrderID();
+                OrderController order = new OrderController();
+                TableController table = new TableController();
 
-                order.OrderID = table.Order_ID;
+                if (comboBoxTable.SelectedIndex != -1)
+                {
+                    table.Name = comboBoxTable.SelectedItem.ToString();
+                    table.getOrderID();
 
-                order.getTotalPrice();
-                MessageBox.Show(order.OrderID.ToString());
-                labelTotal.Text = order.Total_Price.ToString();
+                    order.OrderID = table.Order_ID;
+
+                    order.getTotalPrice();
+                    // MessageBox.Show(order.OrderID.ToString());
+                    labelTotal.Text = order.Total_Price.ToString();
+                }
             }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+            
         }
 
         private void comboBoxTakeAway_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            OrderController order = new OrderController();
-            // ItemController item = new ItemController();
-
-            if (comboBoxTakeAway.SelectedIndex != -1)
+            try
             {
-                order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+                OrderController order = new OrderController();
+                // ItemController item = new ItemController();
 
-                // order.getOrderIDByType();
+                if (comboBoxTakeAway.SelectedIndex != -1)
+                {
+                    order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
 
-                // order.OrderID = item.Order_ID;
+                    // order.getOrderIDByType();
 
-                order.getTotalPrice();
-                // MessageBox.Show(order.OrderID.ToString());
-                labelTotal.Text = order.Total_Price.ToString();
+                    // order.OrderID = item.Order_ID;
+
+                    order.getTotalPrice();
+                    // MessageBox.Show(order.OrderID.ToString());
+                    labelTotal.Text = order.Total_Price.ToString();
+                }
             }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
+            
         }
         /*private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -292,8 +333,9 @@ namespace NKE_Ordering_System
                         payment.Payment_Type = comboBoxPaymentType.SelectedIndex;
                         payment.Payment_Status = 1;
 
-                        order.getOrderIDByType();
-
+                        order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+                        // order.getOrderIDByType();
+                        item.Order_ID = order.OrderID;
                         //order.OrderID = item.Order_ID;
                         payment.Order_ID = order.OrderID;
 

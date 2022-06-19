@@ -17,6 +17,7 @@ namespace NKE_Ordering_System
         public AdminForm()
         {
             InitializeComponent();
+            this.Icon = NKE_Ordering_System.Properties.Resources.Hopstarter_Sleek_Xp_Basic_Administrator;
         }
 
         private void AdminForm_Load(object sender, EventArgs e)
@@ -65,25 +66,39 @@ namespace NKE_Ordering_System
 
         public void initialTableData()
         {
-            comboBoxTable.Items.Clear();
+            try
+            {
+                comboBoxTable.Items.Clear();
 
-            table.showAllTable();
+                table.showAllTable();
 
-            foreach (var t in table.allTable)
-                comboBoxTable.Items.Add(t);
+                foreach (var t in table.allTable)
+                    comboBoxTable.Items.Add(t);
 
-            table.allTable.Clear();
+                table.allTable.Clear();
 
-            comboBoxTable.ResetText();
-            comboBoxTable.SelectedIndex = -1;
+                comboBoxTable.ResetText();
+                comboBoxTable.SelectedIndex = -1;
+            }
+            catch(Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void comboBoxTable_SelectedIndexChanged(object sender, EventArgs e)
         {
-            table.Name = comboBoxTable.SelectedItem.ToString();
-            table.getTableID();
+            try
+            {
+                table.Name = comboBoxTable.SelectedItem.ToString();
+                table.getTableID();
 
-            textBoxNewTable.Text = table.Name;
+                textBoxNewTable.Text = table.Name;
+            }
+            catch(Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void comboBoxSMenuCategory_SelectedIndexChanged(object sender, EventArgs e)

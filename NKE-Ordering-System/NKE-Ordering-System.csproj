@@ -135,6 +135,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
@@ -194,6 +195,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>NKE_Order_DB.mdf</DependentUpon>
     </Content>
+    <None Include="Resources\background-profile-2.jpg" />
+    <None Include="Resources\Papirus-Team-Papirus-Apps-Cs-login.ico" />
+    <None Include="Resources\Mcdo-Design-Smooth-Leopard-History-Folder-Graphite.ico" />
+    <None Include="Resources\Inipagi-Business-Economic-Store.ico" />
+    <None Include="Resources\Hopstarter-Sleek-Xp-Basic-Administrator.ico" />
+    <None Include="Resources\Custom-Icon-Design-Flatastic-5-Payment-card.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

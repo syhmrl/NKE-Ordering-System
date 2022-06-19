@@ -101,7 +101,7 @@ namespace NKE_Ordering_System
             foreach (Order_Table o in queryFindOrder)
             {
                 Id = o.TableID;
-                Order_ID = o.Order_Table_ID;
+                Order_ID = o.OrderID;
             }
         }
 
