@@ -19,6 +19,8 @@ namespace NKE_Ordering_System
         public int TableID { get; set; }
         public bool exists { get; set; }
 
+        public List<int> takeAwayTable = new List<int>();
+
         /*public OrderController()
         {
             OrderID = OrderID;
@@ -40,6 +42,54 @@ namespace NKE_Ordering_System
 
             foreach (Order_Table o in querytable)
                 OrderID = o.OrderID;
+        }
+
+        public void getOrderIDByType()
+        {
+            IEnumerable<Order_Item> querytable =
+                from o_item in db.Order_Items
+                /*join user in db.Users on order.UserID equals user.UserID*/
+                join o in db.Orders on o_item.OrderID equals o.OrderID
+                where o.OrderType == 2
+                select o_item;
+
+            foreach (Order_Item order in querytable)
+            {
+                OrderID = (int)order.OrderID;
+                takeAwayTable.Add(OrderID);
+            }
+                
+                
+            
+            /*IEnumerable<Order_Table> queryFindOrder =
+                from o_table in db.Order_Tables
+                join table in db.Tables on o_table.TableID equals table.TableID
+                where table.TableStatus == 1
+                where table.TableName == Name
+                select o_table;
+
+            foreach (Order_Table o in queryFindOrder)
+            {
+                Id = o.TableID;
+                Order_ID = o.Order_Table_ID;
+            }*/
+        }
+
+        public void showTakeAwayID()
+        {
+            var querytable =
+                from o_item in db.Order_Items
+                    /*join user in db.Users on order.UserID equals user.UserID*/
+                join o in db.Orders on o_item.OrderID equals o.OrderID
+                where o.OrderType == 2
+                select o_item;
+
+            foreach (var order in querytable)
+            {
+                var oID = order.OrderID;
+                takeAwayTable.Add(oID);
+            }
+
         }
 
         public int generateID()
@@ -166,6 +216,7 @@ namespace NKE_Ordering_System
         {
             IEnumerable<Order> queryOrder =
                 from order in db.Orders
+                join o_item in db.Order_Items on order.OrderID equals o_item.OrderID
                 where order.OrderID == OrderID
                 select order;
 
@@ -264,7 +315,17 @@ namespace NKE_Ordering_System
         }*/
         public override void storeTA()
         {
+            Order order = new Order();
+            order.OrderID = OrderID;
+            order.OrderTime = Order_Time;
+            order.OrderStatus = Order_Status;
+            order.OrderType = Order_Type;
+            order.OrderTotalPrice = Total_Price;
+            order.UserID = UserID;
 
+            db.Orders.InsertOnSubmit(order);
+
+            db.SubmitChanges();
         }
         public override void deleteTA()
         {

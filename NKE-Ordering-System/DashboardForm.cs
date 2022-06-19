@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace NKE_Ordering_System
         {
             try
             {
-                OrderController order = new OrderController();
+                OrderController orders = new OrderController();
                 TableController table = new TableController();
                 ItemController item = new ItemController();
 
@@ -40,6 +41,7 @@ namespace NKE_Ordering_System
                 comboBoxMenu.DataSource = item.allItemType;
 
                 initialTableData();
+                initialTakeAwayData();
 
                 //int result = item.debug();
                 //MessageBox.Show(result.ToString());
@@ -85,6 +87,24 @@ namespace NKE_Ordering_System
             comboBoxActiveTable.SelectedIndex = -1;
         }
 
+        public void initialTakeAwayData()
+        {
+            OrderController order = new OrderController();
+
+            comboBoxTakeAway.Items.Clear();
+
+            order.showTakeAwayID();
+
+            foreach (var t in order.takeAwayTable)
+                comboBoxTakeAway.Items.Add(t);
+
+            order.takeAwayTable.Clear();
+
+            comboBoxTakeAway.ResetText();
+
+            comboBoxTakeAway.SelectedIndex = -1;
+        }
+
         private void DashboardForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             /*Form1 loginForm = new Form1();
@@ -108,6 +128,7 @@ namespace NKE_Ordering_System
             ItemController item = new ItemController();
             this.initialTableData();
             this.initialState();
+            this.initialTakeAwayData();
             dataGridViewOrderList.DataSource = null;
             // this.loadOrderTable(order.OrderID);
 
@@ -488,6 +509,32 @@ namespace NKE_Ordering_System
                     }
                     else // take away
                     {
+                        OrderController order = new OrderController();
+                        ItemController item = new ItemController();
+                        // Store Order Table
+                        order.OrderID = order.generateID();
+                        order.Order_Time = DateTime.Now;
+                        order.Order_Status = 1;
+                        order.Order_Type = 2;
+                        order.Total_Price = decimal.Parse(labelPrice.Text);
+                        order.UserID = user_id;
+
+                        order.storeTA(); // Store Order
+
+                        // Item ID
+                        item.Item_Name = comboBoxItem.SelectedItem.ToString();
+
+                        item.getItemID(); // Get Item Id by Name
+
+                        // Store Order_Item Table
+                        item.Order_Item_ID = item.generateOrderItemId();
+                        item.Order_ID = order.OrderID;
+                        item.Quantity = int.Parse(numericUpDownQuantity.Text);
+
+                        item.StoreOrderItem(); // Store Order_Item
+
+                        initialTakeAwayData(); // Reset Form
+
                         display("New take away order successfully added.");
                     }
                 }
@@ -547,6 +594,40 @@ namespace NKE_Ordering_System
                     }
                     else // Take Away
                     {
+                        OrderController order = new OrderController();
+                        ItemController item = new ItemController();
+
+                        order.getOrderIDByType();
+
+                        foreach (var t in order.takeAwayTable)
+                            comboBoxTakeAway.Items.Add(t);
+
+                        // Get Order ID
+                        // staff._Name = comboBoxTakeAway.SelectedItem.ToString();
+                        order.getOrderIDByType(); // Get Order Id by Name
+
+                        // Item ID
+                        item.Item_Name = comboBoxItem.SelectedItem.ToString();
+
+                        item.getItemID(); // Get Item Id by Name
+
+                        // Update Order_Item
+                        item.Order_ID = order.OrderID;
+                        item.Order_Item_ID = item.generateOrderItemId();
+                        item.Quantity = int.Parse(numericUpDownQuantity.Text);
+
+                        item.UpdateOrderItem();
+
+                        if (item.exist == false)
+                            item.StoreOrderItem();
+
+                        order.OrderID = item.Order_ID;
+                        order.Total_Price = order.calculateTotalPrice();
+                        //int count = order.debug();
+                        order.UpdateTotalPrice();
+                        loadOrderTable(order.OrderID);
+                        // display(order.Total_Price.ToString());
+                        labelTotalPrice.Text = order.Total_Price.ToString();
                         display("Order take away updated");
                     }
                 }
@@ -567,6 +648,8 @@ namespace NKE_Ordering_System
 
             try
             {
+                if(comboBoxOrderType.SelectedIndex == 0)
+                { 
                 OrderController order = new OrderController();
                 TableController table = new TableController();
                 ItemController item = new ItemController();
@@ -574,43 +657,92 @@ namespace NKE_Ordering_System
                 string title = "Delete Item";
                 MessageBoxButtons buttons = MessageBoxButtons.YesNo;
                 DialogResult result = MessageBox.Show(message, title, buttons);
-                if(result == DialogResult.Yes)
-                {
-                    // Get Order ID
-                    table.Name = comboBoxActiveTable.SelectedItem.ToString();
-                    table.getOrderID();
-                    /*table.getTableID();
-                    order.TableID = table.Id;
-                    order.getOrderID();*/
-
-                    // Get Order Item ID
-                    item.Order_Item_ID = Convert.ToInt32(dataGridViewOrderList.Rows[e.RowIndex].Cells[0].FormattedValue);
-
-                    // Delete Data
-                    item.DeleteOrder();
-
-                    // Update Total Price
-                    order.OrderID = table.Order_ID;
-                    order.Total_Price = order.calculateTotalPrice();
-                    order.UpdateTotalPrice();
-                    labelTotalPrice.Text = order.Total_Price.ToString();
-
-                    item.Order_ID = table.Order_ID;
-                    // Reset Table
-                    loadOrderTable(order.OrderID);
-
-                    item.checkStatus(); // Check if any item exist after delete
-
-                    if(item.exist == false)
+                    if (result == DialogResult.Yes)
                     {
-                        table.Status = 0; // Set Table Status
-                        table.getTableID(); // Get Table ID based on Table Name
-                        table.UpdateTableStatus(); // Update Table Status based on Table Id
-                        order.Delete(); // Delete Order and Order Table based Order Id
-                        initialTableData(); // Reset Form
-                    }
+                        // Get Order ID
+                        table.Name = comboBoxActiveTable.SelectedItem.ToString();
+                        table.getOrderID();
+                        /*table.getTableID();
+                        order.TableID = table.Id;
+                        order.getOrderID();*/
 
-                    display("Item Succesfully Deleted");
+                        // Get Order Item ID
+                        item.Order_Item_ID = Convert.ToInt32(dataGridViewOrderList.Rows[e.RowIndex].Cells[0].FormattedValue);
+
+                        // Delete Data
+                        item.DeleteOrder();
+
+                        // Update Total Price
+                        order.OrderID = table.Order_ID;
+                        order.Total_Price = order.calculateTotalPrice();
+                        order.UpdateTotalPrice();
+                        labelTotalPrice.Text = order.Total_Price.ToString();
+
+                        item.Order_ID = table.Order_ID;
+                        // Reset Table
+                        loadOrderTable(order.OrderID);
+
+                        item.checkStatus(); // Check if any item exist after delete
+
+                        if (item.exist == false)
+                        {
+                            table.Status = 0; // Set Table Status
+                            table.getTableID(); // Get Table ID based on Table Name
+                            table.UpdateTableStatus(); // Update Table Status based on Table Id
+                            order.Delete(); // Delete Order and Order Table based Order Id
+                            initialTableData(); // Reset Form
+                            initialTakeAwayData();
+                        }
+
+                        display("Item Succesfully Deleted");
+                    }
+                }
+                else
+                {
+                    OrderController order = new OrderController();
+                    ItemController item = new ItemController();
+                    string message = "Do you confirm to delete this item?";
+                    string title = "Delete Item";
+                    MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                    DialogResult result = MessageBox.Show(message, title, buttons);
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // Get Order ID
+                        order.getOrderIDByType();
+                        /*table.Name = comboBoxActiveTable.SelectedItem.ToString();
+                        table.getOrderID();*/
+                        /*table.getTableID();
+                        order.TableID = table.Id;
+                        order.getOrderID();*/
+
+                        // Get Order Item ID
+                        item.Order_Item_ID = Convert.ToInt32(dataGridViewOrderList.Rows[e.RowIndex].Cells[0].FormattedValue);
+
+                        // Delete Data
+                        item.DeleteOrder();
+
+                        // Update Total Price
+                        //order.OrderID = item.Order_ID;
+                        order.Total_Price = order.calculateTotalPrice();
+                        order.UpdateTotalPrice();
+                        labelTotalPrice.Text = order.Total_Price.ToString();
+
+                        //item.Order_ID = table.Order_ID;
+                        // Reset Table
+                        loadOrderTable(order.OrderID);
+
+                        item.checkStatus(); // Check if any item exist after delete
+
+                        if (item.exist == false)
+                        {
+                            order.Delete(); // Delete Order and Order Table based Order Id
+                            initialTableData(); // Reset Form
+                            initialTakeAwayData();
+                        }
+
+                        display("Item Succesfully Deleted");
+                    }
                 }
             }
             catch(Exception error)
@@ -627,6 +759,7 @@ namespace NKE_Ordering_System
             {
                 // Reset
                 initialTableData();
+                initialTakeAwayData();
                 // loadOrderTable();
 
                 display("Table Refreshed");
@@ -662,11 +795,13 @@ namespace NKE_Ordering_System
 
                     table.getTableID(); // Get Table ID based on Table Name
                     table.UpdateTableStatus(); // Update Table Status based on Table Id
+                    order.getOrderIDByType();
                     item.DeleteAllOrder(); // Delete all item
                     order.Delete(); // Delete Order and Order Table based Order Id
 
                     // Reset
                     initialTableData();
+                    initialTakeAwayData();
                     loadOrderTable(order.OrderID);
 
                     MessageBox.Show("Order Canceled Successfully", title);
@@ -683,6 +818,47 @@ namespace NKE_Ordering_System
             e.Handled = e.KeyChar != (char)Keys.Back && !char.IsDigit(e.KeyChar);
         }
 
-        
+        private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(comboBoxTakeAway.SelectedItem != null)
+            {
+                if (comboBoxActiveTable.SelectedIndex != -1)
+                    buttonDeleteAll.Enabled = true;
+
+                OrderController order = new OrderController();
+                ItemController item = new ItemController();
+
+                //order.OrderID = (int) comboBoxActiveTable.SelectedItem;
+                order.getOrderIDByType();
+                // table.getTableID();
+                // order.TableID = table.Id;
+                // order.getOrderID();
+                // int count = table.debug();
+                // order.OrderID = order.OrderID;
+                //order.OrderID = table.Order_ID;
+                item.Order_ID = order.OrderID;
+                // MessageBox.Show(order.OrderID.ToString());
+                order.getTotalPrice();
+
+                labelTotalPrice.Text = order.Total_Price.ToString();
+
+                // item.Show();
+
+                // var first = item.allOrder[0].;
+
+                loadOrderTable(order.OrderID);
+
+                // MessageBox.Show(item.allOrder.ToString());
+
+                // dataGridViewOrderList.Rows.Add(1, item.Item_Name, item.Item_Type, item.Item_Price, item.Quantity);
+
+            }
+            else
+            {
+                MessageBox.Show("error");
+            }
+
+
+        }
     }
 }
