@@ -130,17 +130,23 @@ namespace NKE_Ordering_System
 
         private void comboBoxType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(comboBoxType.SelectedIndex == 0) // Dine-In
+            if (comboBoxType.SelectedIndex == 0) // Dine-In
             {
                 comboBoxTable.Enabled = true;
                 comboBoxTakeAway.Enabled = false;
                 comboBoxPaymentType.Enabled = true;
+                comboBoxTakeAway.ResetText();
+                comboBoxTakeAway.SelectedIndex = -1;
+                labelTotal.Text = "0.00";
             }
             else // Take Away
             {
                 comboBoxTable.Enabled = false;
                 comboBoxTakeAway.Enabled = true;
                 comboBoxPaymentType.Enabled = true;
+                comboBoxTable.ResetText();
+                comboBoxTable.SelectedIndex = -1;
+                labelTotal.Text = "0.00";
             }
         }
 
@@ -163,15 +169,56 @@ namespace NKE_Ordering_System
             OrderController order = new OrderController();
             TableController table = new TableController();
 
-            table.Name = comboBoxTable.SelectedItem.ToString();
-            table.getOrderID();
+            if(comboBoxTable.SelectedIndex != -1)
+            {
+                table.Name = comboBoxTable.SelectedItem.ToString();
+                table.getOrderID();
 
-            order.OrderID = table.Order_ID;
+                order.OrderID = table.Order_ID;
 
-            order.getTotalPrice();
-
-            labelTotal.Text = order.Total_Price.ToString();
+                order.getTotalPrice();
+                MessageBox.Show(order.OrderID.ToString());
+                labelTotal.Text = order.Total_Price.ToString();
+            }
         }
+
+        private void comboBoxTakeAway_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            OrderController order = new OrderController();
+            // ItemController item = new ItemController();
+
+            if (comboBoxTakeAway.SelectedIndex != -1)
+            {
+                order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+
+                // order.getOrderIDByType();
+
+                // order.OrderID = item.Order_ID;
+
+                order.getTotalPrice();
+                // MessageBox.Show(order.OrderID.ToString());
+                labelTotal.Text = order.Total_Price.ToString();
+            }
+        }
+        /*private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            OrderController order = new OrderController();
+            // ItemController item = new ItemController();
+
+            if(comboBoxTakeAway.SelectedIndex != -1)
+            {
+                order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+
+                // order.getOrderIDByType();
+
+                // order.OrderID = item.Order_ID;
+                
+                order.getTotalPrice();
+                MessageBox.Show(order.OrderID.ToString());
+                labelTotal.Text = order.Total_Price.ToString();
+            }
+        }*/
 
         private void buttonPayment_Click(object sender, EventArgs e)
         {
@@ -363,52 +410,6 @@ namespace NKE_Ordering_System
             dashboardForm.Show();*/
         }
 
-        private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*OrderController order = new OrderController();
-
-            if (comboBoxTakeAway.SelectedIndex != -1)
-            {
-                // table.Name = comboBoxTable.SelectedItem.ToString();
-                // table.getOrderID();
-
-                order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
-
-                // order.OrderID = table.Order_ID;
-
-                order.getTotalPrice();
-
-                labelTotal.Text = order.Total_Price.ToString();
-            }*/
-
-
-            /*OrderController order = new OrderController();
-            // TableController table = new TableController();
-
-            // table.Name = comboBoxTable.SelectedItem.ToString();
-            // table.getOrderID();
-
-            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
-
-            // order.OrderID = table.Order_ID;
-
-            order.getTotalPrice();
-
-            labelTotal.Text = order.Total_Price.ToString();*/
-
-
-            OrderController order = new OrderController();
-            ItemController item = new ItemController();
-
-            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
-
-            order.getOrderIDByType();
-
-            order.OrderID = item.Order_ID;
-
-            order.getTotalPrice();
-
-            labelTotal.Text = order.Total_Price.ToString();
-        }
+        
     }
 }

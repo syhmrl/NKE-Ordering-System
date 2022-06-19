@@ -62,17 +62,21 @@ namespace NKE_Ordering_System
 
         public void showTakeAwayID()
         {
-            var querytable =
+            /*var querytable =
                 from o_item in db.Order_Items
-                    /*join user in db.Users on order.UserID equals user.UserID*/
+                    *//*join user in db.Users on order.UserID equals user.UserID*//*
                 join o in db.Orders on o_item.OrderID equals o.OrderID
                 where o.OrderType == 2
-                select o_item;
+                select o_item;*/
+            var queryOrder =
+                from o in db.Orders
+                where o.OrderType == 2
+                select o;
 
-            foreach (var order in querytable)
+            foreach (var order in queryOrder)
             {
-                var oID = order.OrderID;
-                takeAwayTable.Add(oID);
+                OrderID = order.OrderID;
+                takeAwayTable.Add(OrderID);
             }
 
         }
