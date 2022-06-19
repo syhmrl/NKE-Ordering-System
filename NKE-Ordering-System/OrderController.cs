@@ -58,21 +58,6 @@ namespace NKE_Ordering_System
                 OrderID = (int)order.OrderID;
                 takeAwayTable.Add(OrderID);
             }
-                
-                
-            
-            /*IEnumerable<Order_Table> queryFindOrder =
-                from o_table in db.Order_Tables
-                join table in db.Tables on o_table.TableID equals table.TableID
-                where table.TableStatus == 1
-                where table.TableName == Name
-                select o_table;
-
-            foreach (Order_Table o in queryFindOrder)
-            {
-                Id = o.TableID;
-                Order_ID = o.Order_Table_ID;
-            }*/
         }
 
         public void showTakeAwayID()

@@ -604,7 +604,7 @@ namespace NKE_Ordering_System
 
                         // Get Order ID
                         // staff._Name = comboBoxTakeAway.SelectedItem.ToString();
-                        order.getOrderIDByType(); // Get Order Id by Name
+                        order.getOrderIDByType(); // Get Order Id by Type
 
                         // Item ID
                         item.Item_Name = comboBoxItem.SelectedItem.ToString();
@@ -820,44 +820,31 @@ namespace NKE_Ordering_System
 
         private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(comboBoxTakeAway.SelectedItem != null)
-            {
-                if (comboBoxActiveTable.SelectedIndex != -1)
-                    buttonDeleteAll.Enabled = true;
+            if (comboBoxActiveTable.SelectedIndex != -1)
+                buttonDeleteAll.Enabled = true;
 
-                OrderController order = new OrderController();
-                ItemController item = new ItemController();
+            OrderController order = new OrderController();
+            ItemController item = new ItemController();
 
-                //order.OrderID = (int) comboBoxActiveTable.SelectedItem;
-                order.getOrderIDByType();
-                // table.getTableID();
-                // order.TableID = table.Id;
-                // order.getOrderID();
-                // int count = table.debug();
-                // order.OrderID = order.OrderID;
-                //order.OrderID = table.Order_ID;
-                item.Order_ID = order.OrderID;
-                // MessageBox.Show(order.OrderID.ToString());
-                order.getTotalPrice();
+            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+            // order.getOrderIDByType();
+            order.getTotalPrice();
 
-                labelTotalPrice.Text = order.Total_Price.ToString();
+            labelTotalPrice.Text = order.Total_Price.ToString();
 
-                // item.Show();
+            loadOrderTable(order.OrderID);
+            /*if (comboBoxActiveTable.SelectedIndex != -1)
+                buttonDeleteAll.Enabled = true;
 
-                // var first = item.allOrder[0].;
+            OrderController order = new OrderController();
+            ItemController item = new ItemController();
 
-                loadOrderTable(order.OrderID);
+            order.getOrderIDByType();
+            order.getTotalPrice();
 
-                // MessageBox.Show(item.allOrder.ToString());
+            labelTotalPrice.Text = order.Total_Price.ToString();
 
-                // dataGridViewOrderList.Rows.Add(1, item.Item_Name, item.Item_Type, item.Item_Price, item.Quantity);
-
-            }
-            else
-            {
-                MessageBox.Show("error");
-            }
-
+            loadOrderTable(order.OrderID);*/
 
         }
     }

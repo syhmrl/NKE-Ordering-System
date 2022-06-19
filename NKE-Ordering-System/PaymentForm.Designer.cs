@@ -61,9 +61,11 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.comboBoxPaymentType);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(204, 32);
+            this.groupBox1.Location = new System.Drawing.Point(306, 50);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(349, 387);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBox1.Size = new System.Drawing.Size(524, 605);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Payment";
@@ -75,18 +77,20 @@
             this.comboBoxType.Items.AddRange(new object[] {
             "Dine-In",
             "Take Away"});
-            this.comboBoxType.Location = new System.Drawing.Point(163, 36);
+            this.comboBoxType.Location = new System.Drawing.Point(244, 56);
+            this.comboBoxType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxType.Name = "comboBoxType";
-            this.comboBoxType.Size = new System.Drawing.Size(145, 24);
+            this.comboBoxType.Size = new System.Drawing.Size(216, 33);
             this.comboBoxType.TabIndex = 12;
             this.comboBoxType.SelectedIndexChanged += new System.EventHandler(this.comboBoxType_SelectedIndexChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(20, 39);
+            this.label6.Location = new System.Drawing.Point(30, 61);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(76, 16);
+            this.label6.Size = new System.Drawing.Size(120, 25);
             this.label6.TabIndex = 11;
             this.label6.Text = "Order Type";
             // 
@@ -94,43 +98,48 @@
             // 
             this.comboBoxTakeAway.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTakeAway.FormattingEnabled = true;
-            this.comboBoxTakeAway.Location = new System.Drawing.Point(163, 118);
+            this.comboBoxTakeAway.Location = new System.Drawing.Point(244, 184);
+            this.comboBoxTakeAway.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTakeAway.Name = "comboBoxTakeAway";
-            this.comboBoxTakeAway.Size = new System.Drawing.Size(145, 24);
+            this.comboBoxTakeAway.Size = new System.Drawing.Size(216, 33);
             this.comboBoxTakeAway.TabIndex = 10;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 126);
+            this.label5.Location = new System.Drawing.Point(30, 197);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(91, 16);
+            this.label5.Size = new System.Drawing.Size(144, 25);
             this.label5.TabIndex = 9;
             this.label5.Text = "Take Away ID";
             // 
             // labelTotal
             // 
             this.labelTotal.AutoSize = true;
-            this.labelTotal.Location = new System.Drawing.Point(181, 248);
+            this.labelTotal.Location = new System.Drawing.Point(272, 388);
+            this.labelTotal.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(14, 16);
+            this.labelTotal.Size = new System.Drawing.Size(24, 25);
             this.labelTotal.TabIndex = 8;
             this.labelTotal.Text = "0";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 248);
+            this.label4.Location = new System.Drawing.Point(36, 388);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 16);
+            this.label4.Size = new System.Drawing.Size(131, 25);
             this.label4.TabIndex = 7;
             this.label4.Text = "Total (RM) : ";
             // 
             // buttonPayment
             // 
-            this.buttonPayment.Location = new System.Drawing.Point(184, 284);
+            this.buttonPayment.Location = new System.Drawing.Point(276, 444);
+            this.buttonPayment.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonPayment.Name = "buttonPayment";
-            this.buttonPayment.Size = new System.Drawing.Size(124, 33);
+            this.buttonPayment.Size = new System.Drawing.Size(186, 52);
             this.buttonPayment.TabIndex = 6;
             this.buttonPayment.Text = "Proceed Payment";
             this.buttonPayment.UseVisualStyleBackColor = true;
@@ -138,18 +147,20 @@
             // 
             // textBoxAmountPaid
             // 
-            this.textBoxAmountPaid.Location = new System.Drawing.Point(163, 203);
+            this.textBoxAmountPaid.Location = new System.Drawing.Point(244, 317);
+            this.textBoxAmountPaid.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxAmountPaid.Name = "textBoxAmountPaid";
-            this.textBoxAmountPaid.Size = new System.Drawing.Size(145, 22);
+            this.textBoxAmountPaid.Size = new System.Drawing.Size(216, 31);
             this.textBoxAmountPaid.TabIndex = 5;
             this.textBoxAmountPaid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxAmountPaid_KeyPress);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 206);
+            this.label3.Location = new System.Drawing.Point(32, 322);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(115, 16);
+            this.label3.Size = new System.Drawing.Size(187, 25);
             this.label3.TabIndex = 4;
             this.label3.Text = "Amount Paid (RM)";
             // 
@@ -157,18 +168,20 @@
             // 
             this.comboBoxTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTable.FormattingEnabled = true;
-            this.comboBoxTable.Location = new System.Drawing.Point(163, 78);
+            this.comboBoxTable.Location = new System.Drawing.Point(244, 122);
+            this.comboBoxTable.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxTable.Name = "comboBoxTable";
-            this.comboBoxTable.Size = new System.Drawing.Size(145, 24);
+            this.comboBoxTable.Size = new System.Drawing.Size(216, 33);
             this.comboBoxTable.TabIndex = 3;
             this.comboBoxTable.SelectedIndexChanged += new System.EventHandler(this.comboBoxTable_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 86);
+            this.label2.Location = new System.Drawing.Point(32, 134);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 16);
+            this.label2.Size = new System.Drawing.Size(66, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Table";
             // 
@@ -179,29 +192,32 @@
             this.comboBoxPaymentType.Items.AddRange(new object[] {
             "Bank",
             "Cash"});
-            this.comboBoxPaymentType.Location = new System.Drawing.Point(163, 160);
+            this.comboBoxPaymentType.Location = new System.Drawing.Point(244, 250);
+            this.comboBoxPaymentType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxPaymentType.Name = "comboBoxPaymentType";
-            this.comboBoxPaymentType.Size = new System.Drawing.Size(145, 24);
+            this.comboBoxPaymentType.Size = new System.Drawing.Size(216, 33);
             this.comboBoxPaymentType.TabIndex = 1;
             this.comboBoxPaymentType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPaymentType_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 168);
+            this.label1.Location = new System.Drawing.Point(32, 262);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 16);
+            this.label1.Size = new System.Drawing.Size(150, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Payment Type";
             // 
             // PaymentForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1200, 703);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "PaymentForm";
             this.Text = "Payment";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PaymentForm_FormClosed);

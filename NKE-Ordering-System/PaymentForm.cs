@@ -29,6 +29,7 @@ namespace NKE_Ordering_System
 
             initialState();
             initialTableData();
+            initialTakeAway();
         }
 
         public void initialTableData()
@@ -46,6 +47,23 @@ namespace NKE_Ordering_System
 
             comboBoxTable.ResetText();
             comboBoxTable.SelectedIndex = -1;
+        }
+
+        public void initialTakeAway()
+        {
+            OrderController order = new OrderController();
+
+            comboBoxTakeAway.Items.Clear();
+
+            order.showTakeAwayID();
+
+            foreach (var at in order.takeAwayTable)
+                comboBoxTakeAway.Items.Add(at);
+
+            order.takeAwayTable.Clear();
+
+            comboBoxTakeAway.ResetText();
+            comboBoxTakeAway.SelectedIndex = -1;
         }
 
         public void initialState()
@@ -222,13 +240,49 @@ namespace NKE_Ordering_System
                     }
                     else // Take Away
                     {
+                        payment.Payment_ID = payment.generateID();
+                        payment.Payment_Amount = decimal.Parse(labelTotal.Text);
+                        payment.Payment_Type = comboBoxPaymentType.SelectedIndex;
+                        payment.Payment_Status = 1;
+
+                        order.getOrderIDByType();
+
+                        //order.OrderID = item.Order_ID;
+                        payment.Order_ID = order.OrderID;
+
+                        order.Order_Status = 2;
+
                         if (comboBoxPaymentType.SelectedIndex == 0) // Bank
                         {
+                            // MessageBox.Show(order.Order_Status.ToString());
+                            order.UpdateStatus();
+                            // order.Delete();
+                            payment.Store();
+                            item.DeleteAllOrder();
+                            // order.DeleteOrderTable();
+
+                            initialTakeAway();
+                            initialState();
                             MessageBox.Show("Take Away | Bank | Payment Successfull");
                         }
                         else // Cash
                         {
-                            MessageBox.Show("Take Away | Cash | Payment Successfull"); // Display Balance
+                            decimal balance = decimal.Parse(textBoxAmountPaid.Text) - decimal.Parse(labelTotal.Text);
+                            if (balance < 0)
+                                MessageBox.Show("Your Balance is inefficient.");
+                            else
+                            {
+                                order.UpdateStatus();
+                                payment.Store();
+                                item.DeleteAllOrder();
+                                // order.DeleteOrderTable();
+
+                                initialTakeAway();
+                                initialState();
+
+                                MessageBox.Show($"Your Balance is RM{balance}\n" +
+                                    $"Dine-In | Cash | Payment Successfull "); // Display Balance
+                            }
                         }
                     }
                     
@@ -307,6 +361,54 @@ namespace NKE_Ordering_System
         {
             /*DashboardForm dashboardForm = new DashboardForm();
             dashboardForm.Show();*/
+        }
+
+        private void comboBoxTakeAway_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /*OrderController order = new OrderController();
+
+            if (comboBoxTakeAway.SelectedIndex != -1)
+            {
+                // table.Name = comboBoxTable.SelectedItem.ToString();
+                // table.getOrderID();
+
+                order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+
+                // order.OrderID = table.Order_ID;
+
+                order.getTotalPrice();
+
+                labelTotal.Text = order.Total_Price.ToString();
+            }*/
+
+
+            /*OrderController order = new OrderController();
+            // TableController table = new TableController();
+
+            // table.Name = comboBoxTable.SelectedItem.ToString();
+            // table.getOrderID();
+
+            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+
+            // order.OrderID = table.Order_ID;
+
+            order.getTotalPrice();
+
+            labelTotal.Text = order.Total_Price.ToString();*/
+
+
+            OrderController order = new OrderController();
+            ItemController item = new ItemController();
+
+            order.OrderID = int.Parse(comboBoxTakeAway.SelectedItem.ToString());
+
+            order.getOrderIDByType();
+
+            order.OrderID = item.Order_ID;
+
+            order.getTotalPrice();
+
+            labelTotal.Text = order.Total_Price.ToString();
         }
     }
 }
