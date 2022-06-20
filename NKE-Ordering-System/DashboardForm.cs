@@ -633,7 +633,7 @@ namespace NKE_Ordering_System
 
                         initialTakeAwayData(); // Reset Form
 
-                        display("New take away order successfully added.");
+                        display("New take away order with ID " + order.OrderID.ToString() + " successfully added.");
                     }
                 }
                 else
